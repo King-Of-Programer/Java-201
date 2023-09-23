@@ -3,14 +3,89 @@ package step.learning.basics;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class FilesDemo {
 
-public void run(){
+    private Random random;
+
+    public FilesDemo() {
+        this.random = new Random();
+    }
+
+    private void showMax(List<Integer> lineCounts) {
+        int max = 0, max_postion = 0;
+        int iter = 0;
+        for (int x : lineCounts) {
+            iter++;
+            if (x > max) {
+                max = x;
+                max_postion=iter;
+            }
+        }
+        System.out.printf("The max line position: %s, the max line count: %s",max_postion,max);
+    }
+
+    private String readFile(String filename) {
+        StringBuilder sb = new StringBuilder();
+        try (InputStream reader = new FileInputStream(filename)) {
+            int c;// symbol to read
+            while ((c = reader.read()) != -1) {
+                sb.append((char) c);
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return sb.toString();
+    }
+
+    private byte[] generateSymbols() {
+        byte[] arr = new byte[this.random.nextInt(50)];
+        random.nextBytes(arr);
+        arr[arr.length - 1] = (byte) '\n';
+        return arr;
+    }
+    private void createFile(String filename){
+        File file = new File(filename);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    public void run(){
+        String filename = "homework.txt";
+        List<Integer> lineCounts = new LinkedList<Integer>();
+        char newLine = '\n';
+        this.createFile(filename);
+        Scanner kbScanner = new Scanner(System.in);
+        System.out.print("How much strings create in file: ");
+        int countStrings=kbScanner.nextInt();
+        for (int i = 0; i < countStrings; i++) {
+            try (OutputStream writer = new FileOutputStream(filename, true)) {
+                writer.write(generateSymbols());
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        String fileData = this.readFile(filename);
+        int count = 0;
+        for (int i = 0; i < fileData.length(); i++) {
+            if (fileData.charAt(i) == '\n') {
+                lineCounts.add(count);
+                count = 0;
+            }
+            count++;
+        }
+        this.showMax(lineCounts);
+    }
+
+
+
+
+public void run4(){
     File dir = new File("./");
     // стврення new File НЕ впливає на файлову систему, це лише
     // програмний об'єкт, який відповідає за зазначений шлях
