@@ -1,6 +1,8 @@
 package step.learning;
 import step.learning.basics.BasicsDemo;
+import step.learning.basics.Book;
 import step.learning.basics.FilesDemo;
+import step.learning.basics.Library;
 
 /**
  * Hello world!
@@ -10,7 +12,12 @@ public class App
 {
     public static void main( String[] args ) {
       //  new BasicsDemo().run();
-        new FilesDemo().run();
+       // new FilesDemo().run();
+        Book book = new Book("Барри Берд.", "Java для чайников, 7-е издание. ");
+        Library library = new Library();
+        library.add(book);
+        library.printAllCards();
+
     }
 }
 
